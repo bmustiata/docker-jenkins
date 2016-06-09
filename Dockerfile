@@ -1,6 +1,6 @@
 FROM java:8-jdk
 
-RUN apt-get update && apt-get install -y wget git curl zip graphviz && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y wget git zip graphviz && rm -rf /var/lib/apt/lists/*
 
 ENV JENKINS_HOME /var/jenkins_home
 ENV JENKINS_SLAVE_AGENT_PORT 50000
@@ -19,10 +19,15 @@ RUN useradd -d "$JENKINS_HOME" -u 1000 -m -s /bin/bash jenkins
 # or config file with your custom jenkins Docker image.
 RUN mkdir -p /usr/share/jenkins/ref/init.groovy.d
 
+# install docker
+RUN wget -O - https://get.docker.com | sh
+RUN echo 'DOCKER_OPTS="-H tcp://0.0.0.0:4243 -H unix:///var/run/docker.sock"' >> /etc/default/docker
+RUN usermod -G docker jenkins
+
 ENV TINI_SHA 066ad710107dc7ee05d3aa6e4974f01dc98f3888
 
 # Use tini as subreaper in Docker container to adopt zombie processes
-RUN curl -fL https://github.com/krallin/tini/releases/download/v0.5.0/tini-static -o /bin/tini && chmod +x /bin/tini \
+RUN wget https://github.com/krallin/tini/releases/download/v0.5.0/tini-static -O /bin/tini && chmod +x /bin/tini \
   && echo "$TINI_SHA /bin/tini" | sha1sum -c -
 
 # COPY init.groovy /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
@@ -32,7 +37,7 @@ ENV JENKINS_SHA fda2f13e16b81e1d295696eaf838d60f54f9395c
 
 # could use ADD but this one does not check Last-Modified header
 # see https://github.com/docker/docker/issues/8331
-RUN curl -fL http://mirrors.jenkins-ci.org/war/$JENKINS_VERSION/jenkins.war -o /usr/share/jenkins/jenkins.war \
+RUN wget http://mirrors.jenkins-ci.org/war/$JENKINS_VERSION/jenkins.war -O /usr/share/jenkins/jenkins.war \
   && echo "$JENKINS_SHA /usr/share/jenkins/jenkins.war" | sha1sum -c -
 
 ENV JENKINS_UC https://updates.jenkins-ci.org
@@ -48,11 +53,6 @@ ENV COPY_REFERENCE_FILE_LOG $JENKINS_HOME/copy_reference_file.log
 
 COPY jenkins.sh /usr/local/bin/jenkins.sh
 COPY plugins.sh /usr/local/bin/plugins.sh
-
-# install docker
-RUN wget -O - https://get.docker.com | sh
-RUN echo 'DOCKER_OPTS="-H tcp://0.0.0.0:4243 -H unix:///var/run/docker.sock"' >> /etc/default/docker
-RUN usermod -G docker jenkins
 
 RUN chown jenkins:jenkins /usr/local/bin/jenkins.sh && \
 	chown jenkins:jenkins /usr/local/bin/plugins.sh && \
