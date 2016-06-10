@@ -25,7 +25,7 @@ jobConfigHistory:2.14
 jquery:1.11.2-0
 junit:1.13
 ldap:1.12
-m2release:0.15.0
+m2release:0.14.0
 mailer:1.17
 mask-passwords:2.8
 matrix-auth:1.4
