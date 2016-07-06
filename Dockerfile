@@ -1,4 +1,16 @@
-FROM jenkinsci/jenkins:2.12
+FROM jenkinsci/jenkins:2.11
+
+ENV BLUEOCEAN_VERSION=master
+
+RUN mkdir /tmp/blueocean-build && \
+    cd /tmp/blueocean-build && \
+    wget http://mirror.klaus-uwe.me/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz && \
+    tar -zxvf apache-maven-3.3.9-bin.tar.gz && \
+    export PATH="/tmp/blueocean-build/apache-maven-3.3.9/bin:$PATH" && \
+    git clone https://github.com/jenkinsci/blueocean-plugin && \
+    cd blueocean-plugin && \
+    git checkout $BLUEOCEAN_VERSION && \
+    mvn -Dmaven.repo.local=/tmp/blueocean-build/_m2 install
 
 USER root
 
