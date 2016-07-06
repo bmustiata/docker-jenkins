@@ -1,6 +1,6 @@
 FROM jenkinsci/jenkins:2.11
 
-ENV BLUEOCEAN_VERSION=master
+ENV BLUEOCEAN_VERSION=c16c0c597a7cd1a4051901e039614d01f807853e
 
 RUN mkdir /tmp/blueocean-build && \
     cd /tmp/blueocean-build && \
@@ -10,19 +10,41 @@ RUN mkdir /tmp/blueocean-build && \
     git clone https://github.com/jenkinsci/blueocean-plugin && \
     cd blueocean-plugin && \
     git checkout $BLUEOCEAN_VERSION && \
-    mvn -Dmaven.repo.local=/tmp/blueocean-build/_m2 install
+    mvn -Dmaven.repo.local=/tmp/blueocean-build/_m2 install -DskipTests && \
+    mkdir /tmp/blueocean && \
+    cp blueocean-*/target/*.hpi /tmp/blueocean && \
+    rm -fr /tmp/blueocean-build && \
+    mv /tmp/blueocean/blueocean.hpi /tmp/blueocean/blueocean-plugin.hpi
 
 USER root
 
-RUN apt-get update && apt-get install -y wget git mercurial zip graphviz && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get install -y wget git mercurial zip graphviz && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /usr/share/jenkins/ref/plugins/ && \
+    mv /tmp/blueocean/*.hpi /usr/share/jenkins/ref/plugins/
 
 ENV JENKINS_HOME /var/jenkins_home
+
+# install docker
+RUN wget -O - https://get.docker.com | sh
+RUN echo 'DOCKER_OPTS="-H tcp://0.0.0.0:4243 -H unix:///var/run/docker.sock"' >> /etc/default/docker
+RUN usermod -G docker jenkins
 
 # Install the plugins using jenkins itself.
 RUN cd /usr/share/jenkins/ref/plugins/; \
 	install-plugins.sh \
         analysis-core \
         ansicolor \
+        blueocean \
+        blueocean-commons \
+        blueocean-events \
+        blueocean-rest-impl \
+        blueocean-web \
+        blueocean-dashboard \
+        blueocean-personalization \
+        blueocean-rest \
         build-timeout \
         build-metrics \
         credentials \
@@ -54,6 +76,7 @@ RUN cd /usr/share/jenkins/ref/plugins/; \
         matrix-auth \
         matrix-project \
         mercurial \
+        naginator \
         nodelabelparameter \
         pam-auth \
         parameterized-trigger \
@@ -73,10 +96,8 @@ RUN cd /usr/share/jenkins/ref/plugins/; \
         workflow-aggregator \
         ws-cleanup
 
-# install docker
-RUN wget -O - https://get.docker.com | sh
-RUN echo 'DOCKER_OPTS="-H tcp://0.0.0.0:4243 -H unix:///var/run/docker.sock"' >> /etc/default/docker
-RUN usermod -G docker jenkins
+# Force use of latest blueocean plugin, until this one is published and users can rely on update center for updates
+RUN for f in /usr/share/jenkins/ref/plugins/blueocean*.hpi; do mv "$f" "$f.override"; done
 
 # Disable the upgrade wizard
 RUN echo -n 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state  && \
