@@ -1,9 +1,9 @@
 # docker-jenkins
 
-Jenkins2 instance that has docker installed as well. For pipeline centric builds.
+BlueOcean UI Jenkins2 instance that has docker installed as well. For pipeline centric builds.
 With git/mercurial/subversion support.
 
-I try to keep it as much as possible as up to date.
+I try to keep it as much as possible up to date.
 
 This is available on Docker hub as bmst/jenkins2.
 https://hub.docker.com/r/bmst/jenkins2/
