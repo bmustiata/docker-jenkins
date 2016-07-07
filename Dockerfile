@@ -1,6 +1,6 @@
-FROM jenkinsci/jenkins:2.11
+FROM jenkinsci/jenkins:2.9
 
-ENV BLUEOCEAN_VERSION=c16c0c597a7cd1a4051901e039614d01f807853e
+ENV BLUEOCEAN_VERSION=master
 
 RUN mkdir /tmp/blueocean-build && \
     cd /tmp/blueocean-build && \
@@ -13,8 +13,7 @@ RUN mkdir /tmp/blueocean-build && \
     mvn -Dmaven.repo.local=/tmp/blueocean-build/_m2 install -DskipTests && \
     mkdir /tmp/blueocean && \
     cp blueocean-*/target/*.hpi /tmp/blueocean && \
-    rm -fr /tmp/blueocean-build && \
-    mv /tmp/blueocean/blueocean.hpi /tmp/blueocean/blueocean-plugin.hpi
+    rm -fr /tmp/blueocean-build
 
 USER root
 
