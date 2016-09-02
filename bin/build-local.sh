@@ -3,6 +3,6 @@
 PROJECT_DIR=$(readlink -f $(dirname $(readlink -f "$0"))/..)
 cd $PROJECT_DIR
 
-docker build -t bmst/jenkins2 .
+docker build -t bmst/jenkins2:blueocean .
 
 

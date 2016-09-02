@@ -13,11 +13,20 @@ RUN wget -O - https://get.docker.com | sh
 RUN echo 'DOCKER_OPTS="-H tcp://0.0.0.0:4243 -H unix:///var/run/docker.sock"' >> /etc/default/docker
 RUN usermod -G docker jenkins
 
-# Install the plugins using jenkins itself.
+COPY jenkins_home/hudson.model.UpdateCenter.xml /usr/share/jenkins/ref/
+
 RUN cd /usr/share/jenkins/ref/plugins/; \
 	install-plugins.sh \
         analysis-core \
         ansicolor \
+        blueocean \
+        blueocean-commons \
+        blueocean-events \
+        blueocean-rest-impl \
+        blueocean-web \
+        blueocean-dashboard \
+        blueocean-personalization \
+        blueocean-rest \
         build-timeout \
         build-metrics \
         credentials \
