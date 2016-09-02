@@ -1,19 +1,4 @@
-FROM jenkinsci/jenkins:2.9
-
-ENV BLUEOCEAN_VERSION=master
-
-RUN mkdir /tmp/blueocean-build && \
-    cd /tmp/blueocean-build && \
-    wget http://mirror.klaus-uwe.me/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz && \
-    tar -zxvf apache-maven-3.3.9-bin.tar.gz && \
-    export PATH="/tmp/blueocean-build/apache-maven-3.3.9/bin:$PATH" && \
-    git clone https://github.com/jenkinsci/blueocean-plugin && \
-    cd blueocean-plugin && \
-    git checkout $BLUEOCEAN_VERSION && \
-    mvn -Dmaven.repo.local=/tmp/blueocean-build/_m2 install -DskipTests && \
-    mkdir /tmp/blueocean && \
-    cp blueocean-*/target/*.hpi /tmp/blueocean && \
-    rm -fr /tmp/blueocean-build
+FROM jenkinsci/jenkins:2.20
 
 USER root
 
@@ -21,15 +6,15 @@ RUN apt-get update && \
     apt-get install -y wget git mercurial zip graphviz && \
     rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /usr/share/jenkins/ref/plugins/ && \
-    mv /tmp/blueocean/*.hpi /usr/share/jenkins/ref/plugins/
-
 ENV JENKINS_HOME /var/jenkins_home
 
 # install docker
 RUN wget -O - https://get.docker.com | sh
 RUN echo 'DOCKER_OPTS="-H tcp://0.0.0.0:4243 -H unix:///var/run/docker.sock"' >> /etc/default/docker
 RUN usermod -G docker jenkins
+
+# use the experimental update site
+COPY jenkins_home/hudson.model.UpdateCenter.xml /usr/share/jenkins/ref/
 
 # Install the plugins using jenkins itself.
 RUN cd /usr/share/jenkins/ref/plugins/; \
@@ -94,9 +79,6 @@ RUN cd /usr/share/jenkins/ref/plugins/; \
         view-job-filters \
         workflow-aggregator \
         ws-cleanup
-
-# Force use of latest blueocean plugin, until this one is published and users can rely on update center for updates
-RUN for f in /usr/share/jenkins/ref/plugins/blueocean*.hpi; do mv "$f" "$f.override"; done
 
 # Disable the upgrade wizard
 RUN echo -n 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state  && \
