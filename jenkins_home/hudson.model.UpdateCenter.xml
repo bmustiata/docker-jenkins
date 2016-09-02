@@ -1,0 +1,7 @@
+<sites>
+  <site>
+    <id>default</id>
+    <url>http://updates.jenkins-ci.org/experimental/update-center.json</url>
+  </site>
+</sites>
+
