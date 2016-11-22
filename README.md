@@ -5,12 +5,15 @@ With git/mercurial/subversion support.
 
 I try to keep it as much as possible up to date.
 
-This is available on Docker hub as bmst/jenkins2.
+This is available on Docker hub as `bmst/jenkins2`, or `bmst/jenkins2:blueocean` that also has the blueocean built in.
+
 https://hub.docker.com/r/bmst/jenkins2/
 
 This instance also installs some plugins that there is a high chance you'll need, or find useful, see the dockerfile for the full list.
 
 ## How to Run It
+
+### without blueocean
 
 ```sh
 docker run -d \
@@ -19,6 +22,17 @@ docker run -d \
     -p 8080:8080 \
     --name jenkins \
     bmst/jenkins2
+```
+
+### with blueocean
+
+```sh
+docker run -d \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v /your/place/for/jenkins_home:/var/jenkins_home \
+    -p 8080:8080 \
+    --name jenkins \
+    bmst/jenkins2:blueocean
 ```
 
 ## How to Update It
