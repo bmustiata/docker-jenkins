@@ -2,8 +2,11 @@ FROM jenkinsci/jenkins:2.73
 
 USER root
 
-RUN apt-get update && \
+RUN echo 'deb http://http.debian.net/debian jessie-backports main' > /etc/apt/sources.list.d/backports.list && \
+    apt-get update && \
     apt-get install -y wget git mercurial zip graphviz sudo && \
+    apt-get -t jessie-backports install -y ansible python-pip && \
+    pip install docker-py pywinrm && \
     rm -rf /var/lib/apt/lists/*
 
 ENV JENKINS_HOME /var/jenkins_home
