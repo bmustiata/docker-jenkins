@@ -2,8 +2,10 @@ FROM jenkinsci/jenkins:2.67
 
 USER root
 
-RUN apt-get update && \
+RUN echo 'deb http://http.debian.net/debian jessie-backports main' > /etc/apt/sources.list.d/backports.list && \
+    apt-get update && \
     apt-get install -y wget git mercurial zip graphviz && \
+    apt-get -t jessie-backports install -y "ansible" && \
     rm -rf /var/lib/apt/lists/*
 
 ENV JENKINS_HOME /var/jenkins_home
