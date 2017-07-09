@@ -5,7 +5,9 @@ USER root
 RUN echo 'deb http://http.debian.net/debian jessie-backports main' > /etc/apt/sources.list.d/backports.list && \
     apt-get update && \
     apt-get install -y wget git mercurial zip graphviz && \
-    apt-get -t jessie-backports install -y "ansible" && \
+    # add support for docker commands in ansible
+    apt-get -t jessie-backports install -y ansible python-pip && \
+    pip install docker-py pywinrm && \
     rm -rf /var/lib/apt/lists/*
 
 ENV JENKINS_HOME /var/jenkins_home
