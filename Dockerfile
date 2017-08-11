@@ -1,9 +1,9 @@
-FROM jenkinsci/jenkins:2.68
+FROM jenkinsci/jenkins:2.73
 
 USER root
 
 RUN apt-get update && \
-    apt-get install -y wget git mercurial zip graphviz && \
+    apt-get install -y wget git mercurial zip graphviz sudo && \
     rm -rf /var/lib/apt/lists/*
 
 ENV JENKINS_HOME /var/jenkins_home
