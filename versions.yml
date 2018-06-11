@@ -3,5 +3,5 @@ jenkins:
   files:
     Dockerfile: jenkinsci/jenkins:**VERSION$$
     README.md: Currently this is built against Jenkins `**VERSION**`.
-    Jenkinsfile: docker tag ${dockerImageName} germaniumhq/jenkins:**VERSION$$
+    Jenkinsfile: docker tag ${dockerImageName} germaniumhq/jenkins:ansible-**VERSION$$
 
