@@ -7,7 +7,7 @@ use_step_matcher("re")
 
 @given(u'I open the local jenkins')
 def open_local_jenkins(context):
-    open_browser("chrome")
+    open_browser("ff")
 
 
 @when(u'I wait for the jenkins to load')

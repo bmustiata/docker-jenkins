@@ -50,7 +50,6 @@ release
 scm-api
 scoverage
 script-security
-subversion
 swarm
 throttle-concurrents
 timestamper
