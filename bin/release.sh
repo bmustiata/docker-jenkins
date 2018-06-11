@@ -14,6 +14,6 @@ git tag "blueocean-$JENKINS_VERSION"
 git checkout ansible
 git tag "ansible-$JENKINS_VERSION"
 git checkout master
-git push --all -f
-git push --tags
+git push --all -f $@
+git push --tags $@
 
