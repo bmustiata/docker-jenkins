@@ -63,6 +63,11 @@ stage('Test Container') {
                 germaniumImageName
             ]
         }
+
+        sh """
+            docker tag ${dockerImageName} germaniumhq/jenkins
+            docker tag ${dockerImageName} germaniumhq/jenkins:2.121.1
+        """
     }
 }
 
