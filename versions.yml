@@ -1,0 +1,7 @@
+jenkins:
+  version: 2.121.1
+  files:
+    Dockerfile: jenkinsci/jenkins:**VERSION$$
+    README.md: Currently this is built against Jenkins `**VERSION**`.
+    Jenkinsfile: docker tag ${dockerImageName} germaniumhq/jenkins:**VERSION$$
+
