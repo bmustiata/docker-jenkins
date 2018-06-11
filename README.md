@@ -5,6 +5,8 @@ With git/mercurial/subversion support.
 
 I try to keep it as much as possible up to date.
 
+Currently this is built against Jenkins `2.121.1`.
+
 This is available on Docker hub as `bmst/jenkins2`, or `bmst/jenkins2:blueocean` that also has the blueocean built in.
 
 https://hub.docker.com/r/bmst/jenkins2/
