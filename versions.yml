@@ -1,7 +1,7 @@
 jenkins:
-  version: 2.121.1
+  version: "2.142"
   files:
-    Dockerfile: jenkinsci/jenkins:**VERSION$$
+    Dockerfile: jenkins/jenkins:**VERSION$$
     README.md: Currently this is built against Jenkins `**VERSION**`.
     Jenkinsfile: docker tag ${dockerImageName} germaniumhq/jenkins:ansible-**VERSION$$
 
